@@ -1,19 +1,21 @@
 import Book from "./Book";
-import type { BookType } from "./Common";
+import type { BookshelfType, BookType } from "./Common";
 
-const Bookshelf = ({ name, books }: { name: string; books: BookType[] }) => {
+const Bookshelf = ({ bookshelf }: { bookshelf: BookshelfType }) => {
   return (
     <div className="bookshelf">
-      <h2 className="bookshelf-title">{name}</h2>
-      <ul className="books-grid">
-        {books.map((book: BookType, index: number) => {
-          return (
-            <li key={index} className="book">
-              <Book book={book} />
-            </li>
-          );
-        })}
-      </ul>
+      <h2 className="bookshelf-title">{bookshelf.name}</h2>
+      <div className="bookshelf-books">
+        <ul className="books-grid">
+          {bookshelf.books.map((book: BookType, index) => {
+            return (
+              <li key={index}>
+                <Book bookshelf={bookshelf} book={book} />
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </div>
   );
 };

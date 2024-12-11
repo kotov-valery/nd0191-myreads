@@ -3,3 +3,9 @@ export type BookType = {
   title: string;
   authors: string[];
 };
+
+export type BookshelfType = {
+  id: number;
+  name: string;
+  books: BookType[];
+};
