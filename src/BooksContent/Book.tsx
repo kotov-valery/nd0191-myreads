@@ -1,11 +1,11 @@
 import BookCover from "./BookCover";
 import { BookType } from "../Common";
 
-const Book = ({ parentId, book }: { parentId: number; book: BookType }) => {
+const Book = ({ book }: { book: BookType }) => {
   const { imageUrl, title, authors } = book;
   return (
     <div className="book">
-      <BookCover parentId={parentId} bookId={book.id} imageUrl={imageUrl} />
+      <BookCover bookId={book.id} imageUrl={imageUrl} />
       <div className="book-title">{title}</div>
       <div className="book-author">{authors.join(",")}</div>
     </div>

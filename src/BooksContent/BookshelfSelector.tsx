@@ -2,18 +2,11 @@ import { useContext } from "react";
 import { SessionContext } from "../App";
 import { BookshelfType } from "../Common";
 
-const BookshelfSelector = ({
-  parentId,
-  bookId,
-}: {
-  parentId: number;
-  bookId: string;
-}) => {
+const BookshelfSelector = ({ bookId }: { bookId: string }) => {
   const sessionContext = useContext(SessionContext);
 
-  const header = parentId === -1 ? "Add to..." : "Move to...";
-
   const parentShelf = sessionContext.findContainingShelf(bookId);
+  const header = parentShelf === -1 ? "Add to..." : "Move to...";
 
   const selected =
     sessionContext.shelves.find(
