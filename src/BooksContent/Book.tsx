@@ -5,7 +5,7 @@ const Book = ({ parentId, book }: { parentId: number; book: BookType }) => {
   const { imageUrl, title, authors } = book;
   return (
     <div className="book">
-      <BookCover parentId={parentId} imageUrl={imageUrl} />
+      <BookCover parentId={parentId} bookId={book.id} imageUrl={imageUrl} />
       <div className="book-title">{title}</div>
       <div className="book-author">{authors.join(",")}</div>
     </div>

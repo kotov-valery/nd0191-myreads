@@ -1,34 +1,49 @@
 import { Routes, Route, BrowserRouter } from "react-router";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 
 import "./App.css";
-import { BookshelfType, BookType } from "./Common";
+import { BookshelfType, BookType, BackendBookType } from "./Common";
 import ListBooksContent from "./BooksContent/ListBooksContent";
 import SearchBooks from "./SearchBooks";
 
-const DummyBookList: BookType[] = [
-  {
-    id: "1",
-    imageUrl: "./icons/dummy-book.png",
-    title: "Book title 1",
-    authors: ["Book author 1"],
-  },
-  {
-    id: "2",
-    imageUrl: "./icons/dummy-book.png",
-    title: "Book title 2",
-    authors: ["Book author 2"],
-  },
-];
+import * as BooksAPI from "./BooksAPI";
 
-export const SessionContext = createContext([] as BookshelfType[]);
+export type OnUpdateBookType = (bookId: string, shelfId: number) => void;
+export type FindContainingShelf = (bookId: string) => number;
+
+export type SessionContextType = {
+  shelves: BookshelfType[];
+  onUpdateBook: OnUpdateBookType;
+  findContainingShelf: FindContainingShelf;
+};
+
+export const SessionContext = createContext({
+  shelves: [],
+  onUpdateBook: () => {},
+  findContainingShelf: () => -1,
+} as SessionContextType);
 
 function App() {
   const [currentlyReading, setCurrentlyReading] = useState([] as BookType[]);
   const [wantToRead, setWantToRead] = useState([] as BookType[]);
   const [finishedBooks, setFinishedBooks] = useState([] as BookType[]);
 
-  const Shelves = [
+  // Map<BookId, ShelfId>;
+  const booksState = (() => {
+    const state = new Map();
+    currentlyReading.forEach((book: BookType) => {
+      state.set(book.id, 0);
+    });
+    wantToRead.forEach((book: BookType) => {
+      state.set(book.id, 1);
+    });
+    finishedBooks.forEach((book: BookType) => {
+      state.set(book.id, 2);
+    });
+    return state;
+  })();
+
+  const shelves = [
     {
       id: 0,
       name: "Currently reading",
@@ -51,20 +66,75 @@ function App() {
     },
   ] as BookshelfType[];
 
-  useEffect(() => {
-    setCurrentlyReading([...DummyBookList]);
-    setWantToRead([...DummyBookList]);
-    setFinishedBooks([...DummyBookList]);
-  }, []);
+  const removeFromShelf = (bookId: string) => {
+    if (booksState.has(bookId)) {
+      const currentShelf = booksState.get(bookId);
+      if (currentShelf === 0) {
+        setCurrentlyReading(
+          currentlyReading.filter((b: BookType) => b.id !== bookId)
+        );
+      } else if (currentShelf === 1) {
+        setWantToRead(wantToRead.filter((b: BookType) => b.id !== bookId));
+      } else if (currentShelf === 2) {
+        setFinishedBooks(
+          finishedBooks.filter((b: BookType) => b.id !== bookId)
+        );
+      }
+    }
+  };
+
+  const addToShelf = (bookId: string, shelfId: number) => {
+    if (shelfId === -1) return;
+
+    BooksAPI.get(bookId).then((entry: BackendBookType) => {
+      const authors =
+        typeof entry.authors !== "undefined" ? [...entry.authors] : ["Unknown"];
+      const imageUrl =
+        typeof entry.imageLinks !== "undefined"
+          ? entry.imageLinks.thumbnail
+          : "N/A";
+      const newBook = {
+        id: entry.id,
+        title: entry.title,
+        authors: authors,
+        imageUrl: imageUrl,
+      } as BookType;
+      if (shelfId === 0) {
+        setCurrentlyReading(currentlyReading.concat(newBook));
+      } else if (shelfId === 1) {
+        setWantToRead(wantToRead.concat(newBook));
+      } else if (shelfId === 2) {
+        setFinishedBooks(finishedBooks.concat(newBook));
+      }
+    });
+  };
+
+  const onUpdateBook = (bookId: string, shelfId: number) => {
+    removeFromShelf(bookId);
+    addToShelf(bookId, shelfId);
+  };
+
+  const findContainingShelf = (bookId: string) => {
+    if (booksState.has(bookId)) {
+      return booksState.get(bookId);
+    }
+    return -1;
+  };
+
+  const sessionContext: SessionContextType = {
+    shelves: [...shelves],
+    onUpdateBook: onUpdateBook,
+    findContainingShelf: findContainingShelf,
+  };
 
   return (
     <div className="app">
-      <SessionContext.Provider value={[...Shelves]}>
+      <SessionContext.Provider value={sessionContext}>
         <BrowserRouter>
           <Routes>
             <Route
               index
-              element={<ListBooksContent shelves={Shelves} />}
+              element={<ListBooksContent shelves={shelves} />}
             ></Route>
             <Route path="/search" element={<SearchBooks />} />
           </Routes>
