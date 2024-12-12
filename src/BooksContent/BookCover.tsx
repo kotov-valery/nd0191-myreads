@@ -11,13 +11,8 @@ const BookCover = ({
 }) => {
   return (
     <div className="book-top">
-      <div className="book-cover" style={{ width: 150, height: 180 }}>
-        <div
-          className="book-cover-title"
-          style={{ width: 130, height: 170, backgroundColor: "darkgray" }}
-        >
-          <img src={imageUrl} alt={imageUrl} />
-        </div>
+      <div className="book-cover-title">
+        <img className="book-cover" src={imageUrl} alt={bookId} />
         <BookshelfSelector parentId={parentId} bookId={bookId} />
       </div>
     </div>
