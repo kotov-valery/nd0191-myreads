@@ -8,13 +8,13 @@ import SearchBooks from "./SearchBooks";
 
 const DummyBookList: BookType[] = [
   {
-    id: 1,
+    id: "1",
     imageUrl: "./icons/dummy-book.png",
     title: "Book title 1",
     authors: ["Book author 1"],
   },
   {
-    id: 2,
+    id: "2",
     imageUrl: "./icons/dummy-book.png",
     title: "Book title 2",
     authors: ["Book author 2"],
@@ -66,10 +66,7 @@ function App() {
               index
               element={<ListBooksContent shelves={Shelves} />}
             ></Route>
-            <Route
-              path="/search"
-              element={<SearchBooks books={[...DummyBookList]} />}
-            />
+            <Route path="/search" element={<SearchBooks />} />
           </Routes>
         </BrowserRouter>
       </SessionContext.Provider>
