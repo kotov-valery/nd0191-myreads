@@ -1,7 +1,9 @@
+import { Link } from "react-router";
+
 const AddBook = () => {
   return (
     <div className="open-search">
-      <a href="/search">Add book</a>
+      <Link to="/search">Add book</Link>
     </div>
   );
 };

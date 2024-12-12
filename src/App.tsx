@@ -1,7 +1,10 @@
+import { Routes, Route, BrowserRouter } from "react-router";
+import { createContext, useEffect, useState } from "react";
+
 import "./App.css";
 import { BookshelfType, BookType } from "./Common";
-import { createContext, useEffect, useState } from "react";
 import ListBooksContent from "./BooksContent/ListBooksContent";
+import SearchBooks from "./SearchBooks";
 
 const DummyBookList: BookType[] = [
   {
@@ -57,7 +60,18 @@ function App() {
   return (
     <div className="app">
       <SessionContext.Provider value={[...Shelves]}>
-        <ListBooksContent shelves={Shelves} />
+        <BrowserRouter>
+          <Routes>
+            <Route
+              index
+              element={<ListBooksContent shelves={Shelves} />}
+            ></Route>
+            <Route
+              path="/search"
+              element={<SearchBooks books={[...DummyBookList]} />}
+            />
+          </Routes>
+        </BrowserRouter>
       </SessionContext.Provider>
     </div>
   );

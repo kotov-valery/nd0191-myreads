@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Link } from "react-router";
+
 import { BookType } from "./Common";
 import BooksGrid from "./BooksContent/BooksGrid";
 
@@ -7,7 +9,7 @@ const SearchBooks = ({ books }: { books: BookType[] }) => {
   return (
     <div>
       <div className="search-books-bar">
-        <div className="close-search"></div>
+        <Link to="/" className="close-search"></Link>
         <input
           id="query"
           value={query}
