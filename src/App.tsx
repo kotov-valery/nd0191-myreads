@@ -17,6 +17,11 @@ export type SessionContextType = {
   findContainingShelf: FindContainingShelf;
 };
 
+const CURRENTLY_READING = 0;
+const WANT_TO_READ = 1;
+const FINISHED_BOOKS = 2;
+const NOT_ON_A_SHELF = -1;
+
 export const SessionContext = createContext({
   shelves: [],
   onUpdateBook: () => {},
@@ -28,74 +33,93 @@ function App() {
   const [wantToRead, setWantToRead] = useState([] as BookType[]);
   const [finishedBooks, setFinishedBooks] = useState([] as BookType[]);
 
+  // Map<BookId, BookType>
+  const [cachedBooks, setCachedBooks] = useState(new Map());
+
   // Map<BookId, ShelfId>;
   const booksState = (() => {
     const state = new Map();
     currentlyReading.forEach((book: BookType) => {
-      state.set(book.id, 0);
+      state.set(book.id, CURRENTLY_READING);
     });
     wantToRead.forEach((book: BookType) => {
-      state.set(book.id, 1);
+      state.set(book.id, WANT_TO_READ);
     });
     finishedBooks.forEach((book: BookType) => {
-      state.set(book.id, 2);
+      state.set(book.id, FINISHED_BOOKS);
     });
     return state;
   })();
 
+  const onUpdateShelf = (
+    action: string,
+    book: BookType,
+    books: BookType[],
+    setValue: any
+  ) => {
+    if (action === "add") {
+      setValue(books.concat(book));
+    } else if (action === "remove") {
+      setValue(books.filter((b: BookType) => b.id !== book.id));
+    }
+  };
+
   const shelves = [
     {
-      id: 0,
+      id: CURRENTLY_READING,
       name: "Currently reading",
-      books: [...currentlyReading],
+      books: currentlyReading,
+      onUpdate: (action: string, book: BookType) => {
+        onUpdateShelf(action, book, currentlyReading, setCurrentlyReading);
+      },
     },
     {
-      id: 1,
+      id: WANT_TO_READ,
       name: "Want to read",
-      books: [...wantToRead],
+      books: wantToRead,
+      onUpdate: (action: string, book: BookType) => {
+        onUpdateShelf(action, book, wantToRead, setWantToRead);
+      },
     },
     {
-      id: 2,
+      id: FINISHED_BOOKS,
       name: "Read",
-      books: [...finishedBooks],
+      books: finishedBooks,
+      onUpdate: (action: string, book: BookType) => {
+        onUpdateShelf(action, book, finishedBooks, setFinishedBooks);
+      },
     },
     {
-      id: -1,
+      id: NOT_ON_A_SHELF,
       name: "None",
       books: [],
+      onUpdate: () => {},
     },
   ] as BookshelfType[];
 
   const removeFromShelf = (bookId: string) => {
     if (booksState.has(bookId)) {
       const currentShelf = booksState.get(bookId);
-      if (currentShelf === 0) {
-        setCurrentlyReading(
-          currentlyReading.filter((b: BookType) => b.id !== bookId)
-        );
-      } else if (currentShelf === 1) {
-        setWantToRead(wantToRead.filter((b: BookType) => b.id !== bookId));
-      } else if (currentShelf === 2) {
-        setFinishedBooks(
-          finishedBooks.filter((b: BookType) => b.id !== bookId)
-        );
+      if (currentShelf >= 0 && currentShelf < shelves.length) {
+        const book = cachedBooks.get(bookId);
+        shelves[currentShelf].onUpdate("remove", book);
       }
     }
   };
 
   const addToShelf = (bookId: string, shelfId: number) => {
-    if (shelfId === -1) return;
+    if (shelfId < 0 || shelfId >= shelves.length) return;
 
-    BooksAPI.get(bookId).then((entry: BackendBookType) => {
-      const newBook = BooksAPI.parseBookEntry(entry);
-      if (shelfId === 0) {
-        setCurrentlyReading(currentlyReading.concat(newBook));
-      } else if (shelfId === 1) {
-        setWantToRead(wantToRead.concat(newBook));
-      } else if (shelfId === 2) {
-        setFinishedBooks(finishedBooks.concat(newBook));
-      }
-    });
+    if (cachedBooks.has(bookId)) {
+      const book = cachedBooks.get(bookId);
+      shelves[shelfId].onUpdate("add", book);
+    } else {
+      BooksAPI.get(bookId).then((entry: BackendBookType) => {
+        const book = BooksAPI.parseBookEntry(entry);
+        setCachedBooks(cachedBooks.set(bookId, book));
+        shelves[shelfId].onUpdate("add", book);
+      });
+    }
   };
 
   const onUpdateBook = (bookId: string, shelfId: number) => {
@@ -104,10 +128,7 @@ function App() {
   };
 
   const findContainingShelf = (bookId: string) => {
-    if (booksState.has(bookId)) {
-      return booksState.get(bookId);
-    }
-    return -1;
+    return booksState.has(bookId) ? booksState.get(bookId) : -1;
   };
 
   const sessionContext: SessionContextType = {
