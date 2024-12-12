@@ -1,9 +1,17 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import * as BooksAPI from "./BooksAPI";
+import { BackendBookType } from "./Common";
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+test("parse book entry", () => {
+  const book = BooksAPI.parseBookEntry({
+    id: "01234",
+    title: "Some title",
+    authors: ["Margaret"],
+    imageLinks: {
+      thumbnail: "URL",
+    },
+  } as BackendBookType);
+  expect(book.id).toBe("01234");
+  expect(book.title).toBe("Some title");
+  expect(book.authors).toStrictEqual(["Margaret"]);
+  expect(book.imageUrl).toBe("URL");
 });
