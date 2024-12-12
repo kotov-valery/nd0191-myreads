@@ -1,4 +1,4 @@
-import { BookType } from "./Common";
+import { BookType } from "../Common";
 import Book from "./Book";
 
 const BooksGrid = ({ books }: { books: BookType[] }) => {

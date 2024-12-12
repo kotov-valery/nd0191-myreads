@@ -1,5 +1,5 @@
 import BookCover from "./BookCover";
-import { BookType } from "./Common";
+import { BookType } from "../Common";
 
 const Book = ({ book }: { book: BookType }) => {
   const { imageUrl, title, authors } = book;

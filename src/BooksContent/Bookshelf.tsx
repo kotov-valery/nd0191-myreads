@@ -1,5 +1,5 @@
 import BooksGrid from "./BooksGrid";
-import type { BookshelfType } from "./Common";
+import type { BookshelfType } from "../Common";
 
 const Bookshelf = ({ bookshelf }: { bookshelf: BookshelfType }) => {
   return (

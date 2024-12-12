@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { BookType } from "./Common";
-import BooksGrid from "./BooksGrid";
+import BooksGrid from "./BooksContent/BooksGrid";
 
 const SearchBooks = ({ books }: { books: BookType[] }) => {
   const [query, setQuery] = useState("");

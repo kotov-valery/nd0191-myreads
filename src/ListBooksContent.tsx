@@ -1,4 +1,4 @@
-import Bookshelf from "./Bookshelf";
+import Bookshelf from "./BooksContent/Bookshelf";
 import AddBook from "./AddBook";
 import { BookshelfType } from "./Common";
 
