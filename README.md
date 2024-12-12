@@ -1,5 +1,7 @@
 # MyReads Project
 
+![NodeJS Workflow](https://github.com/kotov-valery/nd0191-myreads/actions/workflows/node.js.yml/badge.svg)
+
 This is the final assessment project for Udacity's React Fundamentals course based on [ND0191 My Reader starter code](https://github.com/udacity/nd0191-c1-myreads).
 
 ## Overview
