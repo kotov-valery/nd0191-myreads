@@ -5,7 +5,7 @@ const Bookshelf = ({ bookshelf }: { bookshelf: BookshelfType }) => {
   return (
     <div className="bookshelf">
       <h2 className="bookshelf-title">{bookshelf.name}</h2>
-      <BooksGrid books={bookshelf.books} />
+      <BooksGrid parentId={bookshelf.id} books={bookshelf.books} />
     </div>
   );
 };

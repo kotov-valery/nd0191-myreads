@@ -15,7 +15,7 @@ const SearchBooks = ({ books }: { books: BookType[] }) => {
         />
       </div>
       <div className="search-books-results">
-        <BooksGrid books={books} />
+        <BooksGrid parentId={-1} books={books} />
       </div>
     </div>
   );

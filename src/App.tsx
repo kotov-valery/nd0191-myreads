@@ -1,7 +1,7 @@
 import "./App.css";
 import { BookshelfType, BookType } from "./Common";
-import { useEffect, useState } from "react";
-import ListBooksContent from "./ListBooksContent";
+import { createContext, useEffect, useState } from "react";
+import ListBooksContent from "./BooksContent/ListBooksContent";
 
 const DummyBookList: BookType[] = [
   {
@@ -17,6 +17,8 @@ const DummyBookList: BookType[] = [
     authors: ["Book author 2"],
   },
 ];
+
+export const SessionContext = createContext([] as BookshelfType[]);
 
 function App() {
   const [currentlyReading, setCurrentlyReading] = useState([] as BookType[]);
@@ -39,6 +41,11 @@ function App() {
       name: "Read",
       books: [...finishedBooks],
     },
+    {
+      id: -1,
+      name: "None",
+      books: [],
+    },
   ] as BookshelfType[];
 
   useEffect(() => {
@@ -49,7 +56,9 @@ function App() {
 
   return (
     <div className="app">
-      <ListBooksContent shelves={Shelves} />
+      <SessionContext.Provider value={[...Shelves]}>
+        <ListBooksContent shelves={Shelves} />
+      </SessionContext.Provider>
     </div>
   );
 }

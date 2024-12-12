@@ -1,6 +1,12 @@
 import BookshelfSelector from "./BookshelfSelector";
 
-const BookCover = ({ imageUrl }: { imageUrl: string }) => {
+const BookCover = ({
+  parentId,
+  imageUrl,
+}: {
+  parentId: number;
+  imageUrl: string;
+}) => {
   return (
     <div className="book-top">
       <div className="book-cover" style={{ width: 150, height: 180 }}>
@@ -10,7 +16,7 @@ const BookCover = ({ imageUrl }: { imageUrl: string }) => {
         >
           <img src={imageUrl} alt={imageUrl} />
         </div>
-        <BookshelfSelector />
+        <BookshelfSelector parentId={parentId} />
       </div>
     </div>
   );
