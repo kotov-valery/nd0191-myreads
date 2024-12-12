@@ -87,18 +87,7 @@ function App() {
     if (shelfId === -1) return;
 
     BooksAPI.get(bookId).then((entry: BackendBookType) => {
-      const authors =
-        typeof entry.authors !== "undefined" ? [...entry.authors] : ["Unknown"];
-      const imageUrl =
-        typeof entry.imageLinks !== "undefined"
-          ? entry.imageLinks.thumbnail
-          : "N/A";
-      const newBook = {
-        id: entry.id,
-        title: entry.title,
-        authors: authors,
-        imageUrl: imageUrl,
-      } as BookType;
+      const newBook = BooksAPI.parseBookEntry(entry);
       if (shelfId === 0) {
         setCurrentlyReading(currentlyReading.concat(newBook));
       } else if (shelfId === 1) {

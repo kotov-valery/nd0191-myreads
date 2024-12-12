@@ -23,23 +23,7 @@ const SearchBooks = () => {
     let ignore = false;
     getBooks().then((entries: BackendBookType[]) => {
       if (!ignore) {
-        const newList = entries.map((entry: BackendBookType) => {
-          const authors =
-            typeof entry.authors !== "undefined"
-              ? [...entry.authors]
-              : ["Unknown"];
-          const imageUrl =
-            typeof entry.imageLinks !== "undefined"
-              ? entry.imageLinks.thumbnail
-              : "N/A";
-          return {
-            id: entry.id,
-            title: entry.title,
-            authors: authors,
-            imageUrl: imageUrl,
-          } as BookType;
-        });
-        setBooks(newList);
+        setBooks(entries.map(BooksAPI.parseBookEntry));
       }
       return () => {
         ignore = true;
