@@ -1,3 +1,4 @@
+import React from "react";
 import { Routes, Route, BrowserRouter } from "react-router";
 import { createContext, useState } from "react";
 
@@ -8,33 +9,21 @@ import type {
   BackendBookType,
   SetBooksType,
 } from "./Common";
+import {
+  type SessionContextType,
+  DefaultSessionContextType,
+} from "./SessionContext";
 import ListBooksContent from "./BooksContent/ListBooksContent";
 import SearchBooks from "./SearchBooks";
 
 import * as BooksAPI from "./BooksAPI";
-
-// eslint-disable-next-line
-export type OnUpdateBookType = (bookId: string, shelfId: number) => void;
-
-// eslint-disable-next-line
-export type FindContainingShelf = (bookId: string) => number;
-
-export type SessionContextType = {
-  shelves: BookshelfType[];
-  onUpdateBook: OnUpdateBookType;
-  findContainingShelf: FindContainingShelf;
-};
 
 const CURRENTLY_READING = 0;
 const WANT_TO_READ = 1;
 const FINISHED_BOOKS = 2;
 const NOT_ON_A_SHELF = -1;
 
-export const SessionContext = createContext({
-  shelves: [],
-  onUpdateBook: () => {},
-  findContainingShelf: () => -1,
-} as SessionContextType);
+export const SessionContext = createContext(DefaultSessionContextType);
 
 function App() {
   const [currentlyReading, setCurrentlyReading] = useState([] as BookType[]);
