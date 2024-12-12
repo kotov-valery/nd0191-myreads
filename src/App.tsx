@@ -2,13 +2,21 @@ import { Routes, Route, BrowserRouter } from "react-router";
 import { createContext, useState } from "react";
 
 import "./App.css";
-import { BookshelfType, BookType, BackendBookType } from "./Common";
+import type {
+  BookshelfType,
+  BookType,
+  BackendBookType,
+  SetBooksType,
+} from "./Common";
 import ListBooksContent from "./BooksContent/ListBooksContent";
 import SearchBooks from "./SearchBooks";
 
 import * as BooksAPI from "./BooksAPI";
 
+// eslint-disable-next-line
 export type OnUpdateBookType = (bookId: string, shelfId: number) => void;
+
+// eslint-disable-next-line
 export type FindContainingShelf = (bookId: string) => number;
 
 export type SessionContextType = {
@@ -55,7 +63,7 @@ function App() {
     action: string,
     book: BookType,
     books: BookType[],
-    setValue: any
+    setValue: SetBooksType
   ) => {
     if (action === "add") {
       setValue(books.concat(book));

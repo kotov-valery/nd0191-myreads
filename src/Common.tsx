@@ -22,3 +22,5 @@ export type BackendBookType = {
     thumbnail: string;
   };
 };
+
+export type SetBooksType = (books: BookType[]) => void;

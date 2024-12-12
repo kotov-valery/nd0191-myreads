@@ -21,7 +21,7 @@ const BookshelfSelector = ({ bookId }: { bookId: string }) => {
     );
   });
 
-  const onHandleChange = (e: any) => {
+  const onHandleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const shelf = sessionContext.shelves.find((shelf: BookshelfType) => {
       return (
         e.target.value.trim().toLowerCase() === shelf.name.trim().toLowerCase()
