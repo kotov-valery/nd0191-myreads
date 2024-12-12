@@ -1,4 +1,4 @@
-const AddBook = ({ allBooks }: { allBooks: any }) => {
+const AddBook = () => {
   return (
     <div className="open-search">
       <a href="/search">Add book</a>

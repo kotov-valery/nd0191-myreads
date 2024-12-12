@@ -1,13 +1,6 @@
-import BookshelfChanger from "./BookshelfChanger";
-import { BookshelfType } from "./Common";
+import BookshelfSelector from "./BookshelfSelector";
 
-const BookCover = ({
-  bookshelf,
-  imageUrl,
-}: {
-  bookshelf: BookshelfType;
-  imageUrl: string;
-}) => {
+const BookCover = ({ imageUrl }: { imageUrl: string }) => {
   return (
     <div className="book-top">
       <div className="book-cover" style={{ width: 150, height: 180 }}>
@@ -17,7 +10,7 @@ const BookCover = ({
         >
           <img src={imageUrl} alt={imageUrl} />
         </div>
-        <BookshelfChanger header="Move to..." bookshelf={bookshelf} />
+        <BookshelfSelector />
       </div>
     </div>
   );

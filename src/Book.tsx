@@ -1,17 +1,11 @@
 import BookCover from "./BookCover";
-import { BookshelfType, BookType } from "./Common";
+import { BookType } from "./Common";
 
-const Book = ({
-  bookshelf,
-  book,
-}: {
-  bookshelf: BookshelfType;
-  book: BookType;
-}) => {
+const Book = ({ book }: { book: BookType }) => {
   const { imageUrl, title, authors } = book;
   return (
     <div className="book">
-      <BookCover bookshelf={bookshelf} imageUrl={imageUrl} />
+      <BookCover imageUrl={imageUrl} />
       <div className="book-title">{title}</div>
       <div className="book-author">{authors.join(",")}</div>
     </div>
